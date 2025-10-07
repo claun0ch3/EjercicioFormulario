@@ -60,6 +60,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.padding(5.dp)
+                .fillMaxSize()
         ){
             Image(
                 painter = image,
