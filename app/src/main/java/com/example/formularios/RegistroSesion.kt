@@ -55,7 +55,6 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
 
     var nombre by remember { mutableStateOf(TextFieldValue("")) }
     var email by remember { mutableStateOf(TextFieldValue("")) }
-    var edad by remember { mutableStateOf(TextFieldValue("")) }
     var contrasenia by remember { mutableStateOf(TextFieldValue("")) }
 
     var resultado by remember { mutableStateOf("") }
@@ -63,8 +62,7 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
     var contexto = LocalContext.current
     var intent = Intent(contexto, InicioSesion::class.java)
     intent.putExtra("nombre", nombre.text)
-    intent.putExtra("edad", edad.text)
-    intent.putExtra("email", email.text)
+    intent.putExtra("contrasenia", contrasenia.text)
 
     val sharedprefs = LocalContext.current
         .getSharedPreferences("sharedprefs", Context.MODE_PRIVATE)
@@ -95,15 +93,6 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             OutlinedTextField(
-                value = edad,
-                onValueChange = { x ->
-                    edad = x
-                },
-                label = { Text(text = "Edad:") },
-                placeholder = { Text(text = "20") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            OutlinedTextField(
                 value = contrasenia,
                 onValueChange = { x ->
                     contrasenia = x
@@ -112,16 +101,14 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation('*')
             )
+
             Button(onClick = {
-                if (nombre.text.length < 3) {
+                if (nombre.text.length < 3 || nombre.text.equals(sharedprefs.getString("nombre", null))) {
                     resultado = "El nombre debe tener más de 3 caracteres"
-                } else if (!email.text.contains("@")) {
+                } else if (!email.text.contains("@") || email.text.equals(sharedprefs.getString("email", null))) {
                     resultado = "El email no es válido"
-                } else if (!edad.text.isDigitsOnly()) {
-                    resultado = "La edad no es válida"
-                } else if (!Regex("^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#\\\$%^&*(),.?\":{}|<>]).{8,}\$").matches(
-                        contrasenia.text
-                    )
+                } else if (!Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$\n").
+                    matches(contrasenia.text)
                 ) {
                     resultado = "La contraseña no es válida"
                 } else {
