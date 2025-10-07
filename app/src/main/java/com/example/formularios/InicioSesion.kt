@@ -37,22 +37,20 @@ class InicioSesion : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            PruebasTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
-                        name = name,
-                        edad = edad,
-                        email = email,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Greeting(
+                    name = name,
+                    edad = edad,
+                    email = email,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
         }
     }
 }
 
 @Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
+fun Greeting(name: String, edad: String, email: String, modifier: Modifier = Modifier) {
     Surface {
         Column (verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,6 +76,6 @@ fun Greeting2(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview2() {
     FormulariosTheme {
-        Greeting2("Android")
+        Greeting("Android")
     }
 }
