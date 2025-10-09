@@ -53,20 +53,23 @@ class RegistroSesion : ComponentActivity() {
 @Composable
 fun Greeting3(name: String, modifier: Modifier = Modifier) {
 
-    var nombre by remember { mutableStateOf(TextFieldValue("")) }
-    var email by remember { mutableStateOf(TextFieldValue("")) }
-    var contrasenia by remember { mutableStateOf(TextFieldValue("")) }
+    var nombre by remember { mutableStateOf(("")) }
+    var email by remember { mutableStateOf(("")) }
+    var contrasenia by remember { mutableStateOf(("")) }
 
     var resultado by remember { mutableStateOf("") }
 
     var contexto = LocalContext.current
     var intent = Intent(contexto, InicioSesion::class.java)
-    intent.putExtra("nombre", nombre.text)
-    intent.putExtra("contrasenia", contrasenia.text)
+    var intent2 = Intent(contexto, MainActivity::class.java)
+    intent.putExtra("nombre", nombre)
+    intent.putExtra("contrasenia", contrasenia)
 
     val sharedprefs = LocalContext.current
         .getSharedPreferences("sharedprefs", Context.MODE_PRIVATE)
-    val editor = sharedprefs.edit()
+
+    val existeNombre = sharedprefs.contains("${nombre}_email")
+    val existeEmail = sharedprefs.all.values.contains(email)
 
     Surface (color = Color.White) {
         Column(
@@ -103,22 +106,35 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
             )
 
             Button(onClick = {
-                if (nombre.text.length < 3 || nombre.text.equals(sharedprefs.getString("nombre", null))) {
+                if (nombre.length < 3) {
                     resultado = "El nombre debe tener más de 3 caracteres"
-                } else if (!email.text.contains("@") || email.text.equals(sharedprefs.getString("email", null))) {
+                } else if (existeNombre) {
+                    resultado = "Ese nombre ya existe"
+                } else if (!email.contains("@")) {
                     resultado = "El email no es válido"
-                } else if (!Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$\n").
-                    matches(contrasenia.text)
+                } else if (existeEmail) {
+                    resultado = "El email no es válido"
+                } else if (!Regex("^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#\\\$%^&*(),.?\":{}|<>]).{8,}\$").matches(
+                        contrasenia)
                 ) {
                     resultado = "La contraseña no es válida"
                 } else {
-                    resultado = "Registro exitoso"
-                    editor.putString("nombre", nombre.text)
-                    editor.commit()
+                    with(sharedprefs.edit()){
+                        putString("${nombre}_email",email)
+                        putString("${nombre}_contraseña",contrasenia)
+                        apply()
+                    }
+                    resultado = "Credenciales guardadas"
                     contexto.startActivity(intent)
                 }
             }) {
-                Text(text = "Registrar")
+                Text(text = "Enviar")
+            }
+            Text(text = resultado)
+            Button(onClick = {
+                contexto.startActivity(intent2)
+            }) {
+                Text(text = "Volver a inicio")
             }
         }
     }

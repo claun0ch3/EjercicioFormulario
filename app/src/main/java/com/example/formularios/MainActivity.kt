@@ -50,10 +50,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val image = painterResource(R.drawable.donut)
-
     var contexto = LocalContext.current
-    var intent = Intent(contexto, InicioSesion::class.java)
-    var intent2 = Intent(contexto, RegistroSesion::class.java)
+
+
 
     Surface (color = Color.White) {
         Column (
@@ -79,6 +78,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(16.dp))
 
             Button(onClick = {
+                var intent = Intent(contexto, InicioSesion::class.java)
                 contexto.startActivity(intent)
             }) {
                 Text(text = "Iniciar Sesión")
@@ -88,6 +88,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
             Text(text = "Si no tienes cuenta, debes registrate")
             Button(onClick = {
+                var intent2 = Intent(contexto, RegistroSesion::class.java)
                 contexto.startActivity(intent2)
             }) {
                 Text(text = "Registrarse")

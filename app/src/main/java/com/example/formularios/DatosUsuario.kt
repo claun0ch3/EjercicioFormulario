@@ -29,12 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.formularios.ui.theme.FormulariosTheme
 
-class InicioSesion : ComponentActivity() {
+class DatosUsuario : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,7 +41,9 @@ class InicioSesion : ComponentActivity() {
         setContent {
             FormulariosTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Login(modifier = Modifier.padding(innerPadding))
+                    PantallaDatos(
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
@@ -50,24 +51,28 @@ class InicioSesion : ComponentActivity() {
 }
 
 @Composable
-fun Login(modifier: Modifier = Modifier) {
-    var nombre by remember { mutableStateOf(("")) }
-    var contrasenia by remember { mutableStateOf(("")) }
+fun PantallaDatos(modifier: Modifier = Modifier) {
+    val contexto = LocalContext.current
+    val sharedPrefs = contexto.getSharedPreferences("sharedprefs", Context.MODE_PRIVATE)
+    val editor = sharedPrefs.edit()
 
-    var resultado by remember { mutableStateOf("") }
+    var mensaje by remember { mutableStateOf("") }
 
-    var contexto = LocalContext.current
-    var intent = Intent(contexto, DatosUsuario::class.java)
-    var intent2 = Intent(contexto, MainActivity::class.java)
+    val nombreGuardado = (contexto as DatosUsuario).intent.getStringExtra("nombre") ?: ""
 
-    val sharedprefs = LocalContext.current
-        .getSharedPreferences("sharedprefs", Context.MODE_PRIVATE)
+    var nombre by remember { mutableStateOf((nombreGuardado)) }
+    var email by remember { mutableStateOf(sharedPrefs.getString("${nombreGuardado}_email", "") ?: "") }
+    var contrasenia by remember { mutableStateOf(sharedPrefs.getString("${nombreGuardado}_contrasenia", "") ?: "") }
+
 
     Surface {
-        Column (verticalArrangement = Arrangement.Center,
+        Column(
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.padding(10.dp).fillMaxSize()
-        ){
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { x ->
@@ -76,6 +81,15 @@ fun Login(modifier: Modifier = Modifier) {
                 label = { Text(text = "Nombre:") },
                 placeholder = { Text(text = "Clau") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            OutlinedTextField(
+                value = email,
+                onValueChange = { x ->
+                    email = x
+                },
+                label = { Text(text = "Email:") },
+                placeholder = { Text(text = "claudia@gmail.com") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             OutlinedTextField(
                 value = contrasenia,
@@ -90,34 +104,27 @@ fun Login(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
-                val contraseniaGuardada = sharedprefs.getString("${nombre}_contraseña", null)
+                editor.putString(nombre, nombre)
+                editor.putString("${nombre}_email", email)
+                editor.putString("${nombre}_contrasenia", contrasenia)
+                editor.apply()
 
-                if (contraseniaGuardada == null) {
-                    resultado = "No existe el usuario"
-                } else if (contraseniaGuardada != contrasenia) {
-                    resultado = "Contraseña incorrecta"
-                } else {
-                    resultado = "Inicio de sesión correcto"
-                    intent.putExtra("nombre", nombre)
-                    contexto.startActivity(intent)
-                }
+                mensaje = "Datos guardados correctamente"
+
+                val intent = Intent(contexto, MainActivity::class.java)
+                contexto.startActivity(intent)
             }) {
-                Text("Iniciar Sesión")
+                Text("Guardar cambios y volver")
             }
-            Text(resultado)
-            Button(onClick = {
-                contexto.startActivity(intent2)
-            }) {
-                Text(text = "Volver a inicio")
-            }
+            Text(mensaje)
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
+fun GreetingPreview4() {
     FormulariosTheme {
-        Greeting("Android")
+        PantallaDatos()
     }
 }
