@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -101,15 +103,26 @@ fun Login(modifier: Modifier = Modifier) {
                     intent.putExtra("nombre", nombre)
                     contexto.startActivity(intent)
                 }
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF9162EE),
+                    contentColor = Color.White
+                )) {
                 Text("Iniciar Sesión")
             }
-            Text(resultado)
             Button(onClick = {
                 contexto.startActivity(intent2)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFE1BEE7),
+                    contentColor = Color.White
+                )) {
                 Text(text = "Volver a inicio")
             }
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(resultado)
         }
     }
 }

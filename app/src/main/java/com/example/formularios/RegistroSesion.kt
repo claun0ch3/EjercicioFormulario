@@ -8,10 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -105,6 +108,8 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
                 visualTransformation = PasswordVisualTransformation('*')
             )
 
+            Spacer(Modifier.height(16.dp))
+
             Button(onClick = {
                 if (nombre.length < 3) {
                     resultado = "El nombre debe tener más de 3 caracteres"
@@ -127,15 +132,27 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
                     resultado = "Credenciales guardadas"
                     contexto.startActivity(intent)
                 }
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF9162EE),
+                    contentColor = Color.White
+                )) {
                 Text(text = "Enviar")
             }
-            Text(text = resultado)
+
             Button(onClick = {
                 contexto.startActivity(intent2)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFE1BEE7),
+                    contentColor = Color.White
+                )) {
                 Text(text = "Volver a inicio")
             }
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(text = resultado)
         }
     }
 }
