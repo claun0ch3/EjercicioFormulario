@@ -92,7 +92,7 @@ fun Login(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
-                val contraseniaGuardada = sharedprefs.getString("${nombre}_contraseña", null)
+                val contraseniaGuardada = sharedprefs.getString("${nombre}_contraseña", null) // Obtiene la contraseña guardada en SharedPreferences para el usuario indicado
 
                 if (contraseniaGuardada == null) {
                     resultado = "No existe el usuario"

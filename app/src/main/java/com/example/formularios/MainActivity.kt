@@ -57,7 +57,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     var contexto = LocalContext.current
 
 
-
     Surface (color = Color.White) {
         Column (
             verticalArrangement = Arrangement.Center,
@@ -84,7 +83,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
             Button(onClick = {
                 var intent = Intent(contexto, InicioSesion::class.java)
-                contexto.startActivity(intent)
+                contexto.startActivity(intent) // Nos permite desplazarnos de página (inicio)
             },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF9162EE),
@@ -95,9 +94,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
             Spacer(Modifier.height(16.dp))
 
-            TextButton(onClick = {
+            TextButton(onClick = { // // Permite que el texto se pueda clicar (funcionalidad de boton)
                 var intent2 = Intent(contexto, RegistroSesion::class.java)
-                contexto.startActivity(intent2)
+                contexto.startActivity(intent2) // Nos permite desplazarnos de página (registro)
             }) {
                 Text(text = "Si no tienes cuenta, registrate aquí",
                     style = TextStyle(fontSize = 16.sp),

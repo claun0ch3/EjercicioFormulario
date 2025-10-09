@@ -55,17 +55,21 @@ class DatosUsuario : ComponentActivity() {
 @Composable
 fun PantallaDatos(modifier: Modifier = Modifier) {
     val contexto = LocalContext.current
+    // Obtiene las SharedPreferences y prepara un editor para escribir en ellas
     val sharedPrefs = contexto.getSharedPreferences("sharedprefs", Context.MODE_PRIVATE)
     val editor = sharedPrefs.edit()
 
     var mensaje by remember { mutableStateOf("") }
 
+    // Obtiene el nombre pasado por Intent o usa una cadena vacía si no existe
     val nombreGuardado = (contexto as DatosUsuario).intent.getStringExtra("nombre") ?: ""
 
+    // Variable de estado para el nombre del usuario, inicializada con el valor guardado
     var nombre by remember { mutableStateOf((nombreGuardado)) }
+    // Variable de estado para el email, obtenida desde SharedPreferences según el nombre del usuario
     var email by remember { mutableStateOf(sharedPrefs.getString("${nombreGuardado}_email", "") ?: "") }
+    // Variable de estado para la contraseña, recuperada desde SharedPreferences
     var contrasenia by remember { mutableStateOf(sharedPrefs.getString("${nombreGuardado}_contrasenia", "") ?: "") }
-
 
     Surface {
         Column(
@@ -106,6 +110,7 @@ fun PantallaDatos(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
+                // Guarda el nombre, email y contraseña del usuario en SharedPreferences
                 editor.putString(nombre, nombre)
                 editor.putString("${nombre}_email", email)
                 editor.putString("${nombre}_contrasenia", contrasenia)

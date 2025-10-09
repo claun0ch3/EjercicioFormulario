@@ -55,7 +55,6 @@ class RegistroSesion : ComponentActivity() {
 
 @Composable
 fun Greeting3(name: String, modifier: Modifier = Modifier) {
-
     var nombre by remember { mutableStateOf(("")) }
     var email by remember { mutableStateOf(("")) }
     var contrasenia by remember { mutableStateOf(("")) }
@@ -71,8 +70,8 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
     val sharedprefs = LocalContext.current
         .getSharedPreferences("sharedprefs", Context.MODE_PRIVATE)
 
-    val existeNombre = sharedprefs.contains("${nombre}_email")
-    val existeEmail = sharedprefs.all.values.contains(email)
+    val existeNombre = sharedprefs.contains("${nombre}_email") // Comprueba si ya hay un registro de email asociado al nombre en SharedPreferences
+    val existeEmail = sharedprefs.all.values.contains(email) // Revisa si el email ya está guardado
 
     Surface (color = Color.White) {
         Column(
@@ -105,7 +104,7 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
                 },
                 label = { Text(text = "Contraseña:") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation('*')
+                visualTransformation = PasswordVisualTransformation('*') // Para que la contraseña no sea visible
             )
 
             Spacer(Modifier.height(16.dp))
@@ -124,7 +123,7 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
                 ) {
                     resultado = "La contraseña no es válida"
                 } else {
-                    with(sharedprefs.edit()){
+                    with(sharedprefs.edit()){ // Guarda el email y la contraseña en SharedPreferences y navega a la siguiente pantalla
                         putString("${nombre}_email",email)
                         putString("${nombre}_contraseña",contrasenia)
                         apply()
